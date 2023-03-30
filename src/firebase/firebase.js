@@ -15,7 +15,7 @@ const firebaseConfig = {
 const provider = new OAuthProvider('microsoft.com');
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+export const auth = getAuth(app);
 let firebaseUser = null;
 
 export function getUser(){
@@ -63,8 +63,13 @@ export async function checkSession(){
       });
 }
 
-async function login() {
+let startLoginProcess = false;
 
+export async function login() {
+    if(startLoginProcess){
+        return;
+    }
+    startLoginProcess = true;
     provider.setCustomParameters({
         // Force re-consent.
         prompt: 'consent',
@@ -74,7 +79,7 @@ async function login() {
     
     provider.addScope('mail.read');
 
-    await signInWithPopup(auth, provider)
+    return await signInWithPopup(auth, provider)
         .then((result) => {
             // User is signed in.
             // IdP data available in result.additionalUserInfo.profile.

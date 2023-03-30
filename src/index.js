@@ -10,7 +10,6 @@ import Page2 from './pages/page2/Page2';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
     <ThemeProvider theme={appTheme}>
       <BrowserRouter>
         <Routes>
@@ -20,5 +19,4 @@ root.render(
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
-  </React.StrictMode>
 );

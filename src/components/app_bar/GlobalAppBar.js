@@ -7,21 +7,69 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import React, { useEffect, useState } from 'react';
 import LeftMenu from '../left_menu/LeftMenu';
-import {checkSession, getUser} from '../../firebase/firebase';
-
+import { auth, login, getUserDisplayName } from '../../firebase/firebase';
+import { useAuthState } from "react-firebase-hooks/auth";
+import LoadingPopup from '../loading_popup/LoadingPopup';
+var checkSession = false;
+var i = 0;
 const GlobalAppBar = ({ title }) => {
-    const [leftDrawer, setLeftDrawerState] = React.useState(false);
-    const [user, setUser] = useState(getUser());
-    useEffect(()=>{
-        checkSession().then(()=>{
-            const authUser = getUser();
-            if(authUser !== null){
-                setUser(getUser);
-            }
-        });
-    },[user]);
+    const [leftDrawer, setLeftDrawerState] = useState(false);
+    const [user, loading, error] = useAuthState(auth);
+    const [loadingPopup, setLoadingPopup] = useState(true);
+    //const [checkSession, setCheckSession] = useState(false);
 
-    function userEmail(){
+    // console.log(userEmail());
+
+
+    // useEffect(()=>{
+    //     setTimeout(() => {
+    //         console.log(i);
+    //         i++;
+    //       }, 1000);
+    // },[]);
+
+
+    // if(!checkSession){
+    //     checkSession = true;
+    //     setTimeout(() => {
+    //         if(user === null){
+    //             console.log(userEmail());
+    //             login().then((result)=>{
+    //                 if(result !== null){
+    //                     setLoadingPopup(false);
+    //                 }
+    //             });
+    //         }else{
+    //             setLoadingPopup(false);
+    //         }
+    //     }, 2000);
+    // }
+
+
+
+    useEffect(() => {
+        console.log('useEffect 1');
+        setLoadingPopup(loading);
+        console.log(userEmail());
+        if (userEmail() === '') {
+            i++;
+            if (i == 2) {
+                login().then((result) => {
+                    if (result !== null) {
+                        setLoadingPopup(false);
+                    }
+                });
+            }
+        }
+
+    }, [i]);
+
+    // useEffect(()=>{
+    //     console.log('useEffect 2');
+    //     console.log(userEmail());
+    // },[]);
+
+    function userEmail() {
         return user !== null ? user.email : '';
     }
     return (
@@ -47,6 +95,7 @@ const GlobalAppBar = ({ title }) => {
                     </Toolbar>
                 </AppBar>
             </Box>
+            {loadingPopup && <LoadingPopup />}
         </div>
     )
 }
