@@ -121,7 +121,7 @@ const GlobalAppBar = ({ title }) => {
                                 onClose={handleCloseUserMenu}
                             >
                                <MenuItem key={'Logout'} onClick={handleLogout}>
-                                        <Typography textAlign="center">Cerrar Sessión</Typography>
+                                        <Typography textAlign="center">{'Cerrar Sessi\u00F3n'}</Typography>
                                 </MenuItem>
                             </Menu>
                         </Box>
