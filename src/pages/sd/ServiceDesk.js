@@ -5,7 +5,7 @@ import UsfqServices from '../../services/UsfqServices';
 import LoadingPopup from '../../components/loading_popup/LoadingPopup';
 import { Box, Button, TextField, Grid } from '@mui/material';
 import Swal from 'sweetalert2'
-const Page2 = () => {
+const ServiceDesk = () => {
 
     const [loadingPopup, setLoadingPopup] = useState(false);
     const [bannerId, setBannerId] = useState('');
@@ -32,7 +32,7 @@ const Page2 = () => {
 
     return (
         <div>
-            <GlobalAppBar title={'PAGE 2'} />
+            <GlobalAppBar title={'Service Desk'} />
 
 
             <Box p={2}>
@@ -68,4 +68,4 @@ const Page2 = () => {
     )
 }
 
-export default Page2
+export default ServiceDesk

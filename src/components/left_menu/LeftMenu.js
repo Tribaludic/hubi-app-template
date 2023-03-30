@@ -52,12 +52,12 @@ export default function LeftMenu({ state, setState }) {
                                 <ListItemText primary={'Page 1'} />
                             </ListItemButton>
                         </ListItem>
-                        <ListItem key={'opcion_2'} disablePadding>
-                            <ListItemButton  onClick={() => navigate('/page2')}>
+                        <ListItem key={'sd'} disablePadding>
+                            <ListItemButton  onClick={() => navigate('/sd')}>
                                 <ListItemIcon>
                                     <MailIcon />
                                 </ListItemIcon>
-                                <ListItemText primary={'Page 2'} />
+                                <ListItemText primary={'Service Dek'} />
                             </ListItemButton>
                         </ListItem>
                     </List>
