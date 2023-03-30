@@ -1,4 +1,4 @@
-import { Button, Grid } from '@mui/material';
+import { Avatar, Button, Grid, Menu, MenuItem, Tooltip } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -7,49 +7,42 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import React, { useEffect, useState } from 'react';
 import LeftMenu from '../left_menu/LeftMenu';
-import { auth, login, getUserDisplayName } from '../../firebase/firebase';
+import { auth, login, logout } from '../../firebase/firebase';
 import { useAuthState } from "react-firebase-hooks/auth";
 import LoadingPopup from '../loading_popup/LoadingPopup';
-var checkSession = false;
+import dragon from '../../images/dragon.png';
+import { useNavigate } from 'react-router-dom';
 var i = 0;
 const GlobalAppBar = ({ title }) => {
+    const navigate = useNavigate();
     const [leftDrawer, setLeftDrawerState] = useState(false);
     const [user, loading, error] = useAuthState(auth);
     const [loadingPopup, setLoadingPopup] = useState(true);
-    //const [checkSession, setCheckSession] = useState(false);
 
-    // console.log(userEmail());
+    const [anchorElNav, setAnchorElNav] = useState(null);
+    const [anchorElUser, setAnchorElUser] = useState(null);
 
-
-    // useEffect(()=>{
-    //     setTimeout(() => {
-    //         console.log(i);
-    //         i++;
-    //       }, 1000);
-    // },[]);
-
-
-    // if(!checkSession){
-    //     checkSession = true;
-    //     setTimeout(() => {
-    //         if(user === null){
-    //             console.log(userEmail());
-    //             login().then((result)=>{
-    //                 if(result !== null){
-    //                     setLoadingPopup(false);
-    //                 }
-    //             });
-    //         }else{
-    //             setLoadingPopup(false);
-    //         }
-    //     }, 2000);
-    // }
-
-
-
+    const [profileUrl, setProfileUrl] = useState(dragon);
+    const [displayName, setDisplayName] = useState('');
+  
+    const handleOpenNavMenu = (event) => {
+      setAnchorElNav(event.currentTarget);
+    };
+    const handleOpenUserMenu = (event) => {
+      setAnchorElUser(event.currentTarget);
+    };
+  
+    const handleCloseNavMenu = () => {
+      setAnchorElNav(null);
+    };
+  
+    const handleCloseUserMenu = () => {
+      setAnchorElUser(null);
+    };
+   
     useEffect(() => {
         console.log('useEffect 1');
-        setLoadingPopup(loading);
+        setLoadingPopup(loadingPopup);
         console.log(userEmail());
         if (userEmail() === '') {
             i++;
@@ -64,14 +57,26 @@ const GlobalAppBar = ({ title }) => {
 
     }, [i]);
 
-    // useEffect(()=>{
-    //     console.log('useEffect 2');
-    //     console.log(userEmail());
-    // },[]);
+    useEffect(() => {
+        if(user !== null){
+            setLoadingPopup(false);
+            setDisplayName(user.displayName);
+            setProfileUrl('https://ws.usfq.edu.ec/UserImage.aspx?key='+user.email.toLowerCase());
+        }      
+    }, [user]);
 
-    function userEmail() {
-        return user !== null ? user.email : '';
+
+
+    const userEmail = () => user !== null ? user.email : '';
+
+    const handleLogout = async () => {
+        await logout();
+        setLoadingPopup(true);
+        i=0;
+        window.location.reload(false);
     }
+
+
     return (
         <div>
             <LeftMenu state={leftDrawer} setState={setLeftDrawerState} />
@@ -91,7 +96,35 @@ const GlobalAppBar = ({ title }) => {
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                             {title}
                         </Typography>
-                        <Button color="inherit">{userEmail()}</Button>
+                        {/* <Button color="inherit">{userEmail()}</Button> */}
+                        <Typography textAlign="right" pr={1}>{displayName}</Typography>
+                        <Box sx={{ flexGrow: 0 }}>
+                            <Tooltip title="Open settings">
+                                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                    <Avatar alt="Remy Sharp" src={profileUrl} />
+                                </IconButton>
+                            </Tooltip>
+                            <Menu
+                                sx={{ mt: '45px' }}
+                                id="menu-appbar"
+                                anchorEl={anchorElUser}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={Boolean(anchorElUser)}
+                                onClose={handleCloseUserMenu}
+                            >
+                               <MenuItem key={'Logout'} onClick={handleLogout}>
+                                        <Typography textAlign="center">Cerrar Sessión</Typography>
+                                </MenuItem>
+                            </Menu>
+                        </Box>
                     </Toolbar>
                 </AppBar>
             </Box>

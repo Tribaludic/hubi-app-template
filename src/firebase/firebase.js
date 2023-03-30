@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithPopup, OAuthProvider, onAuthStateChanged } from "firebase/auth";
+import { getAuth, signInWithPopup, OAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDUEOL1TLDf0_3w-72v3H1T97PphjaAhAs",
@@ -96,6 +96,6 @@ export async function login() {
         });
 }
 
-// export async function logout() {
-//    await auth.signOut();
-// }
+export async function logout() {
+   await signOut(auth);
+}
