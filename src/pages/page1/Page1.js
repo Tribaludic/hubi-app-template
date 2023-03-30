@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import GlobalAppBar from '../../components/app_bar/GlobalAppBar';
+import {checkSession} from '../../firebase/firebase';
 
 const Page1 = () => {
     return (

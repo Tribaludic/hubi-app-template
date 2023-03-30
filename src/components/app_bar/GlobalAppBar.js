@@ -5,11 +5,25 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import LeftMenu from '../left_menu/LeftMenu';
+import {checkSession, getUser} from '../../firebase/firebase';
 
 const GlobalAppBar = ({ title }) => {
     const [leftDrawer, setLeftDrawerState] = React.useState(false);
+    const [user, setUser] = useState(getUser());
+    useEffect(()=>{
+        checkSession().then(()=>{
+            const authUser = getUser();
+            if(authUser !== null){
+                setUser(getUser);
+            }
+        });
+    },[user]);
+
+    function userEmail(){
+        return user !== null ? user.email : '';
+    }
     return (
         <div>
             <LeftMenu state={leftDrawer} setState={setLeftDrawerState} />
@@ -29,7 +43,7 @@ const GlobalAppBar = ({ title }) => {
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                             {title}
                         </Typography>
-                        <Button color="inherit">Save</Button>
+                        <Button color="inherit">{userEmail()}</Button>
                     </Toolbar>
                 </AppBar>
             </Box>
